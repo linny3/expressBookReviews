@@ -40,20 +40,40 @@ public_users.get('/isbn/:isbn',function (req, res) {
   
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+    let booksbyauthor = [];
+    // Get author
+    const author = req.params.author;
+    // Get keys for books array
+    const isbns = Object.keys(books);
+    // Iterate through books and get each book for author adding it to booksbyauthor array
+    isbns.forEach((isbn) => {
+        if(books[isbn].author === author) {
+            booksbyauthor.push({"isbn": isbn, "title":books[isbn]["title"], "reviews":books[isbn]["reviews"]});
+        }
+    });
+    res.send(JSON.stringify({booksbyauthor}, null, 4));
+
 });
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+    // Get book title
+    const title = req.params.title;
+    // Get keys for books array
+    const isbns = Object.keys(books);
+    // Iterate through books and get title of the requested book and list book
+    isbns.forEach((isbn) => {
+        if(books[isbn].title === title) {
+            res.send(books[isbn])
+        }
+    })
 });
 
 //  Get book review
 public_users.get('/review/:isbn',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+    // Get book isbn
+    const isbn = req.params.isbn;
+    res.send(books[isbn].reviews)
 });
 
 module.exports.general = public_users;
