@@ -79,11 +79,17 @@ regd_users.use("/auth", function auth(req, res, next) {
 
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
-    const review = req.body.review
-    const isbn = req.params.isbn
-    books[isbn].reviews = {"review":review, "user":req.session.authorization.username}
+    const review = req.body.review;
+    const isbn = req.params.isbn;
+    books[isbn].reviews[req.session.authorization.username] = review;
     res.send(books[isbn].reviews)
 });
+
+regd_users.delete("/auth/review/:isbn", (req, res) => {
+    const isbn = req.params.isbn
+    delete books[isbn].reviews[req.session.authorization.username]
+    res.send(books[isbn].reviews)
+})
 
 module.exports.authenticated = regd_users;
 module.exports.isValid = isValid;
