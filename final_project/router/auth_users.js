@@ -58,7 +58,7 @@ regd_users.post("/login", (req,res) => {
    } 
 });
 
-app.use("/auth", function auth(req, res, next) {
+regd_users.use("/auth", function auth(req, res, next) {
     // Check if user is logged in and has valid access token
     if (req.session.authorization) {
         let token = req.session.authorization['accessToken'];
@@ -79,7 +79,10 @@ app.use("/auth", function auth(req, res, next) {
 
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
-   
+    const review = req.body.review
+    const isbn = req.params.isbn
+    books[isbn].reviews = {"review":review, "user":req.session.authorization.username}
+    res.send(books[isbn].reviews)
 });
 
 module.exports.authenticated = regd_users;
